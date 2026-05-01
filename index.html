@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crete Info Point Mobile</title>
+    <style>
+        /* Βασικές Ρυθμίσεις */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; 
+            background-color: #f0f2f5; 
+            color: #1c1e21; 
+            line-height: 1.5;
+        }
+
+        /* Responsive Language Bar */
+        .language-bar { 
+            background: #ffffff; 
+            padding: 10px; 
+            display: flex; 
+            justify-content: center; 
+            gap: 12px; 
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .language-bar img { 
+            width: 35px; 
+            height: auto;
+            cursor: pointer; 
+            border-radius: 4px;
+            transition: transform 0.2s;
+        }
+        .language-bar img:active { transform: scale(0.9); }
+
+        /* Hero Image */
+        .hero-container { width: 100%; overflow: hidden; }
+        .hero-img { 
+            width: 100%; 
+            height: auto; 
+            display: block;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        /* Bonus Tip - Προσαρμογή για μικρές οθόνες */
+        .bonus-tip { 
+            background-color: #fff9db; 
+            border: 1px solid #ffe066;
+            margin: 15px; 
+            padding: 15px; 
+            font-size: 0.95rem;
+            border-radius: 12px; 
+            color: #856404;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        /* Menu Buttons - Responsive Grid */
+        .menu-container { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; /* 2 στήλες στα κινητά */
+            gap: 12px; 
+            padding: 15px; 
+        }
+
+        .category-btn { 
+            aspect-ratio: 1 / 1; /* Τετράγωνα κουμπιά */
+            padding: 15px; 
+            font-size: 0.9rem; 
+            border: none; 
+            border-radius: 16px; 
+            background: #ffffff; 
+            color: #007bff; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            gap: 10px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            font-weight: 600;
+        }
+        .category-btn span { font-size: 2.5rem; }
+        .category-btn:active { background: #e7f3ff; }
+
+        /* Content Panels */
+        .content-panel { 
+            display: none; 
+            min-height: 100vh;
+            background: white; 
+            padding: 20px; 
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .back-btn { 
+            background: #f0f2f5; 
+            border: none; 
+            padding: 12px 20px; 
+            border-radius: 20px; 
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Table Responsive */
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+        th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
+        th { background: #f8f9fa; }
+
+        /* Media Query για μεγαλύτερες οθόνες (Tablets/PC) */
+        @media (min-width: 768px) {
+            .menu-container { grid-template-columns: repeat(4, 1fr); max-width: 900px; margin: 0 auto; }
+            .hero-img { border-radius: 0 0 20px 20px; max-width: 900px; margin: 0 auto; }
+            .bonus-tip { max-width: 870px; margin: 20px auto; }
+            .content-panel { max-width: 800px; margin: 20px auto; border-radius: 20px; min-height: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="language-bar">
+        <img src="https://flagcdn.com/w80/gr.png" onclick="translateTo('el')" alt="GR">
+        <img src="https://flagcdn.com/w80/gb.png" onclick="translateTo('en')" alt="EN">
+        <img src="https://flagcdn.com/w80/de.png" onclick="translateTo('de')" alt="DE">
+        <img src="https://flagcdn.com/w80/fr.png" onclick="translateTo('fr')" alt="FR">
+        <img src="https://flagcdn.com/w80/it.png" onclick="translateTo('it')" alt="IT">
+    </div>
+
+    <div id="main-view">
+        <div class="hero-container">
+            <img src="crete.png" alt="Crete" class="hero-img">
+        </div>
+
+        <div class="bonus-tip" id="bonus-text">
+            <span>💡</span>
+            <div id="bonus-inner">Στην Κρήτη η έννοια της "Φιλοξενίας" είναι ιερή. Μην εκπλαγείς αν σε κεράσουν σε ένα χωριό – είναι αγένεια να αρνηθείς!</div>
+        </div>
+
+        <div class="menu-container">
+            <button class="category-btn" onclick="showCategory('history')">
+                <span>🏛️</span> <label data-key="btn-history">Ιστορία</label>
+            </button>
+            <button class="category-btn" onclick="showCategory('nature')">
+                <span>🏔️</span> <label data-key="btn-nature">Φύση</label>
+            </button>
+            <button class="category-btn" onclick="showCategory('diet')">
+                <span>🥘</span> <label data-key="btn-diet">Διατροφή</label>
+            </button>
+            <button class="category-btn" onclick="showCategory('regions')">
+                <span>📍</span> <label data-key="btn-regions">Νομοί</label>
+            </button>
+        </div>
+    </div>
+
+    <!-- Panels -->
+    <div id="history" class="content-panel">
+        <button class="back-btn" onclick="goBack()" data-key="back">← Πίσω</button>
+        <h2 data-key="btn-history">Ιστορία & Πολιτισμός</h2>
+        <div data-key="txt-history"></div>
+    </div>
+
+    <div id="nature" class="content-panel">
+        <button class="back-btn" onclick="goBack()" data-key="back">← Πίσω</button>
+        <h2 data-key="btn-nature">Γεωγραφία & Φύση</h2>
+        <div data-key="txt-nature"></div>
+    </div>
+
+    <div id="diet" class="content-panel">
+        <button class="back-btn" onclick="goBack()" data-key="back">← Πίσω</button>
+        <h2 data-key="btn-diet">Κρητική Διατροφή</h2>
+        <div data-key="txt-diet"></div>
+    </div>
+
+    <div id="regions" class="content-panel">
+        <button class="back-btn" onclick="goBack()" data-key="back">← Πίσω</button>
+        <h2 data-key="btn-regions">Οι 4 Νομοί</h2>
+        <div class="table-wrapper" id="table-container"></div>
+    </div>
+
+    <script>
+        const translations = {
+            el: {
+                "back": "← Πίσω",
+                "bonus": "Στην Κρήτη η έννοια της 'Φιλοξενίας' είναι ιερή. Μην εκπλαγείς αν σε κεράσουν σε ένα χωριό – είναι αγένεια να αρνηθείς!",
+                "btn-history": "Ιστορία",
+                "btn-nature": "Φύση",
+                "btn-diet": "Διατροφή",
+                "btn-regions": "Νομοί",
+                "txt-history": "<ul><li><strong>Μινωικός Πολιτισμός:</strong> Κνωσός, Φαιστός.</li><li><strong>Παράδοση:</strong> Λύρα & Μαντινάδες.</li></ul>",
+                "txt-nature": "<ul><li><strong>Βουνά:</strong> Ψηλορείτης.</li><li><strong>Φαράγγια:</strong> Σαμαριά.</li><li><strong>Παραλίες:</strong> Μπάλος, Ελαφονήσι.</li></ul>",
+                "txt-diet": "<ul><li><strong>Βασικά:</strong> Ελαιόλαδο, Ντάκος.</li><li><strong>Ποτό:</strong> Τσικουδιά.</li></ul>",
+                "table": "<table><tr><th>Νομός</th><th>Info</th></tr><tr><td>Χανιά</td><td>Λιμάνι</td></tr><tr><td>Ρέθυμνο</td><td>Παλιά Πόλη</td></tr><tr><td>Ηράκλειο</td><td>Κνωσός</td></tr><tr><td>Λασίθι</td><td>Ελούντα</td></tr></table>"
+            },
+            en: {
+                "back": "← Back",
+                "bonus": "In Crete, hospitality is sacred. Don't be surprised if locals offer you a treat – it's rude to refuse!",
+                "btn-history": "History",
+                "btn-nature": "Nature",
+                "btn-diet": "Diet",
+                "btn-regions": "Regions",
+                "txt-history": "<ul><li><strong>Minoans:</strong> Knossos Palace.</li><li><strong>Music:</strong> Cretan Lyra.</li></ul>",
+                "txt-nature": "<ul><li><strong>Peaks:</strong> Psiloritis.</li><li><strong>Gorges:</strong> Samaria.</li><li><strong>Beaches:</strong> Balos, Elafonisi.</li></ul>",
+                "txt-diet": "<ul><li><strong>Basics:</strong> Olive Oil, Dakos.</li><li><strong>Spirit:</strong> Tsikoudia.</li></ul>",
+                "table": "<table><tr><th>Region</th><th>Info</th></tr><tr><td>Chania</td><td>Venetian Port</td></tr><tr><td>Rethymno</td><td>Old Town</td></tr><tr><td>Heraklion</td><td>Museums</td></tr><tr><td>Lasithi</td><td>Elounda</td></tr></table>"
+            }
+            // Πρόσθεσε εδώ de, fr, it με τον ίδιο τρόπο
+        };
+
+        function translateTo(lang) {
+            const dict = translations[lang] || translations['en'];
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (dict[key]) el.innerHTML = dict[key];
+            });
+            document.getElementById('bonus-inner').innerText = dict['bonus'];
+            document.getElementById('table-container').innerHTML = dict['table'] || "";
+        }
+
+        function showCategory(id) {
+            document.getElementById('main-view').style.display = 'none';
+            document.getElementById(id).style.display = 'block';
+            window.scrollTo(0,0);
+        }
+
+        function goBack() {
+            document.querySelectorAll('.content-panel').forEach(p => p.style.display = 'none');
+            document.getElementById('main-view').style.display = 'block';
+        }
+
+        translateTo('el');
+    </script>
+</body>
+</html>
